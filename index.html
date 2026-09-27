@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Parking Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>🚗 Smart Parking Management System</h1>
+        <p>IoT-Based Intelligent Parking Solution</p>
+    </header>
+
+    <main>
+
+        <!-- Dashboard -->
+        <section class="dashboard">
+            <div class="card">
+                <h3>Total Slots</h3>
+                <span id="totalSlots">8</span>
+            </div>
+
+            <div class="card available">
+                <h3>Available</h3>
+                <span id="availableSlots">8</span>
+            </div>
+
+            <div class="card occupied">
+                <h3>Occupied</h3>
+                <span id="occupiedSlots">0</span>
+            </div>
+
+            <div class="card">
+                <h3>Revenue</h3>
+                <span id="revenue">₹0</span>
+            </div>
+        </section>
+
+        <!-- Parking Slots -->
+        <section>
+            <h2>Parking Slots</h2>
+
+            <div class="parking-grid" id="parkingGrid">
+
+                <div class="slot available-slot" id="slot1">
+                    <h3>S1</h3>
+                    <p>AVAILABLE</p>
+                </div>
+
+                <div class="slot available-slot" id="slot2">
+                    <h3>S2</h3>
+                    <p>AVAILABLE</p>
+                </div>
+
+                <div class="slot available-slot" id="slot3">
+                    <h3>S3</h3>
+                    <p>AVAILABLE</p>
+                </div>
+
+                <div class="slot available-slot" id="slot4">
+                    <h3>S4</h3>
+                    <p>AVAILABLE</p>
+                </div>
+
+                <div class="slot available-slot" id="slot5">
+                    <h3>S5</h3>
+                    <p>AVAILABLE</p>
+                </div>
+
+                <div class="slot available-slot" id="slot6">
+                    <h3>S6</h3>
+                    <p>AVAILABLE</p>
+                </div>
+
+                <div class="slot available-slot" id="slot7">
+                    <h3>S7</h3>
+                    <p>AVAILABLE</p>
+                </div>
+
+                <div class="slot available-slot" id="slot8">
+                    <h3>S8</h3>
+                    <p>AVAILABLE</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Vehicle Entry -->
+        <section class="entry-section">
+
+            <h2>🚘 Vehicle Entry</h2>
+
+            <label>RFID Number</label>
+            <input type="text" id="rfid" placeholder="Enter RFID UID">
+
+            <label>Vehicle Number</label>
+            <input type="text" id="vehicleNumber" placeholder="e.g. AP37AB1234">
+
+            <button onclick="parkVehicle()">Park Vehicle</button>
+
+            <p id="message"></p>
+
+        </section>
+
+        <!-- System Architecture -->
+        <section class="architecture">
+
+            <h2>🌐 IoT System Architecture</h2>
+
+            <div class="flow">
+                <div>🚗 Vehicle</div>
+                <span>→</span>
+                <div>📡 RFID / Sensors</div>
+                <span>→</span>
+                <div>🔧 ESP32</div>
+                <span>→</span>
+                <div>☁️ Cloud</div>
+                <span>→</span>
+                <div>💻 Dashboard</div>
+            </div>
+
+        </section>
+
+        <!-- Parking History -->
+        <section>
+
+            <h2>📋 Parking History</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>RFID</th>
+                        <th>Vehicle</th>
+                        <th>Slot</th>
+                        <th>Entry Time</th>
+                    </tr>
+                </thead>
+
+                <tbody id="history">
+                </tbody>
+
+            </table>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>IoT-Based Intelligent Smart Parking Management System</p>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
