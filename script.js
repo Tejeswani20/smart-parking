@@ -1,6 +1,8 @@
 let occupiedSlots = 0;
 let revenue = 0;
 
+let parkedVehicles = {};
+
 function parkVehicle() {
 
     const rfid = document.getElementById("rfid").value.trim();
@@ -8,12 +10,17 @@ function parkVehicle() {
     const message = document.getElementById("message");
 
     if (rfid === "" || vehicle === "") {
-        message.innerText = "⚠️ Please enter RFID number and vehicle number.";
+        message.innerText = "⚠️ Please enter RFID and vehicle number.";
         message.style.color = "red";
         return;
     }
 
-    // Find first available slot
+    if (parkedVehicles[vehicle]) {
+        message.innerText = "⚠️ Vehicle is already parked.";
+        message.style.color = "red";
+        return;
+    }
+
     let selectedSlot = null;
 
     for (let i = 1; i <= 8; i++) {
@@ -32,7 +39,9 @@ function parkVehicle() {
         return;
     }
 
-    // Change slot to occupied
+    const slotName = selectedSlot.querySelector("h3").innerText;
+    const entryTime = new Date();
+
     selectedSlot.classList.remove("available-slot");
     selectedSlot.classList.add("occupied-slot");
 
@@ -44,36 +53,103 @@ function parkVehicle() {
     document.getElementById("availableSlots").innerText =
         8 - occupiedSlots;
 
-    // Current time
-    const time = new Date().toLocaleTimeString();
+    parkedVehicles[vehicle] = {
+        rfid: rfid,
+        slot: slotName,
+        entryTime: entryTime
+    };
 
-    // Add parking history
     const history = document.getElementById("history");
 
     const row = document.createElement("tr");
 
+    row.id = "vehicle-" + vehicle;
+
     row.innerHTML = `
         <td>${rfid}</td>
         <td>${vehicle}</td>
-        <td>${selectedSlot.querySelector("h3").innerText}</td>
-        <td>${time}</td>
+        <td>${slotName}</td>
+        <td>${entryTime.toLocaleTimeString()}</td>
     `;
 
     history.appendChild(row);
 
-    // Demo parking fee
-    revenue += 20;
+    message.innerText =
+        "✅ Vehicle parked successfully in " + slotName;
+
+    message.style.color = "green";
+
+    document.getElementById("rfid").value = "";
+    document.getElementById("vehicleNumber").value = "";
+}
+
+
+function exitVehicle() {
+
+    const vehicle = document.getElementById("exitVehicle").value.trim();
+    const message = document.getElementById("exitMessage");
+
+    if (vehicle === "") {
+        message.innerText = "⚠️ Enter vehicle number.";
+        message.style.color = "red";
+        return;
+    }
+
+    const vehicleData = parkedVehicles[vehicle];
+
+    if (!vehicleData) {
+        message.innerText = "❌ Vehicle not found.";
+        message.style.color = "red";
+        return;
+    }
+
+    const exitTime = new Date();
+
+    const duration =
+        Math.max(
+            1,
+            Math.ceil(
+                (exitTime - vehicleData.entryTime) / (1000 * 60 * 60)
+            )
+        );
+
+    const fee = duration * 20;
+
+    revenue += fee;
 
     document.getElementById("revenue").innerText =
         "₹" + revenue;
 
+    const slot = document.getElementById(
+        "slot" + vehicleData.slot.substring(1)
+    );
+
+    slot.classList.remove("occupied-slot");
+    slot.classList.add("available-slot");
+
+    slot.querySelector("p").innerText = "AVAILABLE";
+
+    occupiedSlots--;
+
+    document.getElementById("occupiedSlots").innerText =
+        occupiedSlots;
+
+    document.getElementById("availableSlots").innerText =
+        8 - occupiedSlots;
+
+    const historyRow =
+        document.getElementById("vehicle-" + vehicle);
+
+    if (historyRow) {
+        historyRow.remove();
+    }
+
+    delete parkedVehicles[vehicle];
+
     message.innerText =
-        "✅ Vehicle parked successfully in " +
-        selectedSlot.querySelector("h3").innerText;
+        "✅ Exit successful! Parking Fee: ₹" + fee;
 
     message.style.color = "green";
 
-    // Clear inputs
-    document.getElementById("rfid").value = "";
-    document.getElementById("vehicleNumber").value = "";
+    document.getElementById("exitVehicle").value = "";
 }
